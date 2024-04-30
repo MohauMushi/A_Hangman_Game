@@ -38,3 +38,27 @@ const gameOver = (isVictory) => {
 		gameModal.classList.add('show');
 	}, 300);
 }
+
+const initGame = (button, clickedLetter) => {
+	//  Checking if clickedLetter is exist on the currentWord
+	if(currentWord.includes(clickedLetter)){
+		// showing all correct on the word display
+		[...currentWord].forEach((letter, index) => {
+			if(letter === clickedLetter){
+				correctLetters.push(letter);
+				wordDisplay.querySelectorAll('li')[index].innerText = letter;
+				wordDisplay.querySelectorAll('li')[index].classList.add('guessed');
+			}
+		});
+	} else {
+		// if clicked letter doesn't exist then update the wrongGuessCount and hangman image
+		wrongGuessCount++;
+		hangmanImage.src = `images/hangman-${wrongGuessCount}.svg`;
+	}
+	button.disabled = true;
+	guessesText.innerText = `${wrongGuessCount} / ${maxGuesses}`;
+
+	// Calling gameOver function if any of these conditions are meet 
+	if(wrongGuessCount === maxGuesses) return gameOver(false);
+	if(correctLetters.length === currentWord.length) return gameOver(true);
+}
